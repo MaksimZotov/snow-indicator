@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:snow_indicator/presenter/navigation/route_generator.dart';
-import 'package:snow_indicator/presenter/screens/city_info_screen.dart';
 
 class ChosenCitiesWidget extends StatefulWidget {
   const ChosenCitiesWidget({Key? key}) : super(key: key);
