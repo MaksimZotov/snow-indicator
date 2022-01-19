@@ -1,7 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:snow_indicator/data/databases/database.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
+import 'package:snow_indicator/presenter/logic/city_info_logic.dart';
 import 'chose_background_dialog.dart';
 
 class CityInfoWidget extends StatefulWidget {
@@ -10,45 +9,31 @@ class CityInfoWidget extends StatefulWidget {
   const CityInfoWidget({Key? key, required this.city}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => CityInfoState(city);
+  State<StatefulWidget> createState() => CityInfoState(city: city);
 }
 
 class CityInfoState extends State<CityInfoWidget>
     with SingleTickerProviderStateMixin {
-  bool _isLoading = false;
-  File? _bg;
-  final City _city;
-  late AnimationController _controller;
+  late final AnimationController _controller;
+  late final CityInfoLogic logic;
 
-  CityInfoState(this._city);
-
-  Duration _getDuration() {
-    if (_city.snowiness == 0) {
-      return const Duration(milliseconds: 10000);
-    } else {
-      return Duration(milliseconds: 10000 ~/ _city.snowiness);
-    }
+  CityInfoState({required City city}){
+    logic = CityInfoLogic(city);
   }
 
   Future _showChoseBackgroundDialog(BuildContext ctx) async {
-    _city.image = await showDialog<String?>(
+    logic.city.image = await showDialog<String?>(
       context: ctx,
       builder: (_) => const ChoseBackgroundDialog(),
     );
-    CitiesDatabase.instance.update(_city);
-    await _setBackground();
-  }
-
-  Future _setBackground() async {
-    setState(() { _isLoading = true; });
-    _bg = _city.image != null ? File(_city.image!) : null;
-    setState(() { _isLoading = false; });
+    logic.updateCity();
+    await logic.setBackground();
   }
 
   Container _getBackground() => Container(
-        child: _bg != null
+        child: logic.bg != null
             ? Image.file(
-                _bg!,
+                logic.bg!,
                 fit: BoxFit.cover,
                 height: double.infinity,
                 width: double.infinity,
@@ -59,7 +44,7 @@ class CityInfoState extends State<CityInfoWidget>
 
   Align _getSnowiness() => Align(
         child: Text(
-          _city.snowiness.toString(),
+          logic.city.snowiness.toString(),
           style: TextStyle(
               fontSize: 54,
               color: Colors.lightBlueAccent,
@@ -90,19 +75,21 @@ class CityInfoState extends State<CityInfoWidget>
 
   @override
   void initState() {
+    logic.addListener(_update);
     _controller = AnimationController(
-      duration: _getDuration(),
+      duration: logic.getDuration(),
       vsync: this,
     );
     _controller.repeat();
-    _setBackground();
+    logic.setBackground();
     super.initState();
   }
 
   @override
   void dispose() {
+    logic.removeListener(_update);
     _controller.dispose();
-    CitiesDatabase.instance.close();
+    logic.closeDatabase();
     super.dispose();
   }
 
@@ -110,7 +97,7 @@ class CityInfoState extends State<CityInfoWidget>
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(_city.name),
+          title: Text(logic.city.name),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.add_photo_alternate),
@@ -118,7 +105,7 @@ class CityInfoState extends State<CityInfoWidget>
             ),
           ],
         ),
-        body: _isLoading
+        body: logic.isLoading
             ? const CircularProgressIndicator()
             : Stack(
                 fit: StackFit.expand,
@@ -131,5 +118,9 @@ class CityInfoState extends State<CityInfoWidget>
                   _getSnowflake(bottom: 25, right: 25),
                 ],
               ));
+  }
+
+  void _update() {
+    setState(() { });
   }
 }

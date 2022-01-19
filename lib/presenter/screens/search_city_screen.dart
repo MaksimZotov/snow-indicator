@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:snow_indicator/domain/entities/city.dart';
+import 'package:snow_indicator/presenter/logic/search_city_logic.dart';
 
 class SearchCityWidget extends StatefulWidget {
   const SearchCityWidget({Key? key}) : super(key: key);
@@ -8,20 +8,10 @@ class SearchCityWidget extends StatefulWidget {
   State<StatefulWidget> createState() => SearchCityState();
 }
 
-List<City> _cities = [
-  City(name: 'Magnitogorsk', snowiness: 9.2, time: DateTime.now()),
-  City(name: 'Moscow', snowiness: 5.2, time: DateTime.now()),
-  City(name: 'Saint-Petersburg', snowiness: 0.5, time: DateTime.now()),
-];
-List<City> _filteredCities = [
-  City(name: 'Magnitogorsk', snowiness: 9.2, time: DateTime.now()),
-  City(name: 'Moscow', snowiness: 5.2, time: DateTime.now()),
-  City(name: 'Saint-Petersburg', snowiness: 0.5, time: DateTime.now()),
-];
-
 class SearchCityState extends State<SearchCityWidget> {
   Icon customIcon = const Icon(Icons.search);
   Widget customSearchBar = const Text('SearchCity');
+  final logic = SearchCityLogic();
 
   @override
   Widget build(BuildContext ctx) {
@@ -38,14 +28,7 @@ class SearchCityState extends State<SearchCityWidget> {
                     customSearchBar = ListTile(
                       title: TextField(
                         onChanged: (text) {
-                          setState(() {
-                            _filteredCities.clear();
-                            for (City city in _cities) {
-                              if (city.name.startsWith(text)) {
-                                _filteredCities.add(city);
-                              }
-                            }
-                          });
+                          logic.filterCities(text);
                         },
                         decoration: const InputDecoration(
                           hintText: 'Some city...',
@@ -72,20 +55,20 @@ class SearchCityState extends State<SearchCityWidget> {
           ],
         ),
         body: ListView.separated(
-          itemCount: _filteredCities.length,
+          itemCount: logic.cities.length,
           separatorBuilder: (BuildContext ctx, int index) => const Divider(
             indent: 8,
             endIndent: 8,
             color: Colors.grey,
           ),
           itemBuilder: (BuildContext context, int index) => ListTile(
-            title: Text(_cities[index].name),
-            subtitle: Text("Snowiness: ${_cities[index].snowiness}"),
+            title: Text(logic.cities[index].name),
+            subtitle: Text("Snowiness: ${logic.cities[index].snowiness}"),
             leading: const Image(
               image: AssetImage('assets/images/snowflake.png'),
             ),
             onTap: () {
-              Navigator.of(ctx).pop(_cities[index]);
+              Navigator.of(ctx).pop(logic.cities[index]);
             },
           ),
         ));
