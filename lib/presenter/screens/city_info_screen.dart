@@ -105,7 +105,7 @@ class CityInfoState extends State<CityInfoWidget>
           ],
         ),
         body: Stack(
-          fit: StackFit.loose,
+          fit: StackFit.expand,
           children: [
             _getBackground(),
             _getSnowiness(),
