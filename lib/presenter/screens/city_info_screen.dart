@@ -89,7 +89,6 @@ class CityInfoState extends State<CityInfoWidget>
   void dispose() {
     logic.removeListener(_update);
     _controller.dispose();
-    logic.closeDatabase();
     super.dispose();
   }
 

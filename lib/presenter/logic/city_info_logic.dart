@@ -32,10 +32,6 @@ class CityInfoLogic extends ChangeNotifier {
     CitiesDatabase.instance.update(city);
   }
 
-  void closeDatabase() {
-    CitiesDatabase.instance.close();
-  }
-
   void _update(VoidCallback callback) {
     callback();
     notifyListeners();

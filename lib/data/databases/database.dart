@@ -69,7 +69,7 @@ class CitiesDatabase {
 
   Future<List<City>> readAllCities() async {
     final db = await instance.database;
-    const orderBy = '${CityFields.time} DESC';
+    const orderBy = '${CityFields.time} ASC';
     final result = await db.query(Tables.cities, orderBy: orderBy);
     return result.map((json) => CityConverter.fromJson(json)).toList();
   }
