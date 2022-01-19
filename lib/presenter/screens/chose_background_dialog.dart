@@ -21,7 +21,6 @@ class ChoseBackgroundDialog extends StatelessWidget {
   Widget build(BuildContext ctx) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      //this right here
       child: Wrap(
         children: [
           Column(

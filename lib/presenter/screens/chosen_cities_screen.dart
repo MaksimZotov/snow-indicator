@@ -90,7 +90,6 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0),
               ),
-              //this right here
               child: Wrap(
                 children: [
                   Column(
