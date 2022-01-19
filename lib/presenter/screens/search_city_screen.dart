@@ -9,14 +9,14 @@ class SearchCityWidget extends StatefulWidget {
 }
 
 List<City> _cities = [
-  City("Magnitogorsk", 9.2),
-  City("Moscow", 5.2),
-  City("Saint-Petersburg", 0.5),
+  City(name: 'Magnitogorsk', snowiness: 9.2, time: DateTime.now()),
+  City(name: 'Moscow', snowiness: 5.2, time: DateTime.now()),
+  City(name: 'Saint-Petersburg', snowiness: 0.5, time: DateTime.now()),
 ];
 List<City> _filteredCities = [
-  City("Magnitogorsk", 9.2),
-  City("Moscow", 5.2),
-  City("Saint-Petersburg", 0.5),
+  City(name: 'Magnitogorsk', snowiness: 9.2, time: DateTime.now()),
+  City(name: 'Moscow', snowiness: 5.2, time: DateTime.now()),
+  City(name: 'Saint-Petersburg', snowiness: 0.5, time: DateTime.now()),
 ];
 
 class SearchCityState extends State<SearchCityWidget> {

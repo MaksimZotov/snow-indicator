@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
+import 'package:snow_indicator/data/databases/database.dart';
 import 'package:snow_indicator/presenter/navigation/route_generator.dart';
 
 class ChosenCitiesWidget extends StatefulWidget {
@@ -11,7 +12,8 @@ class ChosenCitiesWidget extends StatefulWidget {
 
 class ChosenCitiesState extends State<ChosenCitiesWidget> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  late final List<City> _cities = [];
+  late List<City> _cities;
+  bool _isLoading = false;
 
   Future _searchCity(BuildContext ctx) async {
     final addedCity = await Navigator.of(ctx).pushNamed(
@@ -29,6 +31,7 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
     setState(() {
       _cities.add(city);
     });
+    CitiesDatabase.instance.create(city);
   }
 
   void _removeCity(int index) {
@@ -39,6 +42,25 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
     setState(() {
       _cities.removeAt(index);
     });
+    CitiesDatabase.instance.delete(_cities[index].id!);
+  }
+
+  Future _loadCities() async {
+    setState(() => _isLoading = true);
+    _cities = await CitiesDatabase.instance.readAllCities();
+    setState(() => _isLoading = false);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCities();
+  }
+
+  @override
+  void dispose() {
+    CitiesDatabase.instance.close();
+    super.dispose();
   }
 
   @override
@@ -47,11 +69,16 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
       appBar: AppBar(
         title: const Text("Chosen Cities"),
       ),
-      body: AnimatedList(
-        key: _listKey,
-        itemBuilder: (ctx, index, anim) => _getCityWidget(ctx, index, anim),
-        initialItemCount: _cities.length,
-      ),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : AnimatedList(
+              key: _listKey,
+              itemBuilder: (ctx, index, anim) =>
+                  _getCityWidget(ctx, index, anim),
+              initialItemCount: _cities.length,
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _searchCity(ctx);

@@ -3,8 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ChoseBackgroundDialog extends StatelessWidget {
-  const ChoseBackgroundDialog({Key? key}) : super(key: key);
   final padding = 10.0;
+
+  const ChoseBackgroundDialog({Key? key}) : super(key: key);
 
   Future _pickImage(BuildContext ctx, ImageSource imageSource) async {
     late final String? path;

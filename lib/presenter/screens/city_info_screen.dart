@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:snow_indicator/data/databases/database.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'chose_background_dialog.dart';
 
@@ -14,6 +15,7 @@ class CityInfoWidget extends StatefulWidget {
 
 class CityInfoState extends State<CityInfoWidget>
     with SingleTickerProviderStateMixin {
+  bool _isLoading = false;
   File? _bg;
   final City _city;
   late AnimationController _controller;
@@ -29,15 +31,18 @@ class CityInfoState extends State<CityInfoWidget>
   }
 
   Future _showChoseBackgroundDialog(BuildContext ctx) async {
-    final path = await showDialog<String?>(
+    _city.image = await showDialog<String?>(
       context: ctx,
       builder: (_) => const ChoseBackgroundDialog(),
     );
-    _bg = null;
-    if (path != null) {
-      _bg = File(path);
-    }
-    setState(() {});
+    CitiesDatabase.instance.update(_city);
+    await _setBackground();
+  }
+
+  Future _setBackground() async {
+    setState(() { _isLoading = true; });
+    _bg = _city.image != null ? File(_city.image!) : null;
+    setState(() { _isLoading = false; });
   }
 
   Container _getBackground() => Container(
@@ -90,12 +95,14 @@ class CityInfoState extends State<CityInfoWidget>
       vsync: this,
     );
     _controller.repeat();
+    _setBackground();
     super.initState();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    CitiesDatabase.instance.close();
     super.dispose();
   }
 
@@ -111,16 +118,18 @@ class CityInfoState extends State<CityInfoWidget>
             ),
           ],
         ),
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            _getBackground(),
-            _getSnowiness(),
-            _getSnowflake(top: 25, left: 25),
-            _getSnowflake(top: 25, right: 25),
-            _getSnowflake(bottom: 25, left: 25),
-            _getSnowflake(bottom: 25, right: 25),
-          ],
-        ));
+        body: _isLoading
+            ? const CircularProgressIndicator()
+            : Stack(
+                fit: StackFit.expand,
+                children: [
+                  _getBackground(),
+                  _getSnowiness(),
+                  _getSnowflake(top: 25, left: 25),
+                  _getSnowflake(top: 25, right: 25),
+                  _getSnowflake(bottom: 25, left: 25),
+                  _getSnowflake(bottom: 25, right: 25),
+                ],
+              ));
   }
 }
