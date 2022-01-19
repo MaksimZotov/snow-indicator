@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:snow_indicator/data/databases/database.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
-import 'package:snow_indicator/presenter/logic/base_logic.dart';
 
 class ChosenCitiesLogic extends ChangeNotifier {
   List<City> _cities = [];
