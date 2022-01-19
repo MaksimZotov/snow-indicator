@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/presenter/navigation/route_generator.dart';
 
 class ChosenCitiesWidget extends StatefulWidget {
@@ -10,20 +11,33 @@ class ChosenCitiesWidget extends StatefulWidget {
 
 class ChosenCitiesState extends State<ChosenCitiesWidget> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  late final List<String> _items = [];
+  late final List<City> _cities = [];
 
-  void _addItem(String title) {
-    _listKey.currentState?.insertItem(_items.length);
+  Future _searchCity(BuildContext ctx) async {
+    final addedCity = await Navigator.of(ctx).pushNamed(
+      Routes.toSearchCity,
+    );
+    if (addedCity != null && addedCity is City?) {
+      _addCity(addedCity as City);
+    }
+  }
+
+  void _addCity(City city) {
+    _listKey.currentState?.insertItem(
+      _cities.length,
+    );
     setState(() {
-      _items.add(title);
+      _cities.add(city);
     });
   }
 
-  void _removeItem(int index) {
-    _listKey.currentState
-        ?.removeItem(index, (ctx, anim) => _slideItem(ctx, index, anim));
+  void _removeCity(int index) {
+    _listKey.currentState?.removeItem(
+      index,
+      (ctx, anim) => _getCityWidget(ctx, index, anim),
+    );
     setState(() {
-      _items.removeAt(index);
+      _cities.removeAt(index);
     });
   }
 
@@ -35,20 +49,20 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
       ),
       body: AnimatedList(
         key: _listKey,
-        itemBuilder: (ctx, index, anim) => _slideItem(ctx, index, anim),
-        initialItemCount: _items.length,
+        itemBuilder: (ctx, index, anim) => _getCityWidget(ctx, index, anim),
+        initialItemCount: _cities.length,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _addItem("Item ${_items.length}"),
+        onPressed: () {
+          _searchCity(ctx);
+        },
         tooltip: 'Navigate to search_city_screen',
-        child: const Icon(
-          Icons.add,
-        ),
+        child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
-  Widget _slideItem(BuildContext ctx, int index, Animation anim) {
+  Widget _getCityWidget(BuildContext ctx, int index, Animation anim) {
     return SlideTransition(
       position: anim.drive(
         Tween(
@@ -57,15 +71,15 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
         ),
       ),
       child: ListTile(
-        title: Text(_items[index]),
-        subtitle: index.isOdd ? const Text("subtitle") : null,
+        title: Text(_cities[index].name),
+        subtitle: Text("Snowiness: ${_cities[index].snowiness}"),
         leading: const Image(
           image: AssetImage('assets/images/snowflake.png'),
         ),
         onTap: () {
           Navigator.of(ctx).pushNamed(
             Routes.toCityInfo,
-            arguments: _items[index],
+            arguments: _cities[index],
           );
         },
       ),

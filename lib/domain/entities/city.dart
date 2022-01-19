@@ -1,4 +1,5 @@
 class City {
-  late final int snowiness;
-  City(this.snowiness);
+  final String name;
+  final double snowiness;
+  City(this.name, this.snowiness);
 }

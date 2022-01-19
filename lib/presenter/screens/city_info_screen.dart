@@ -1,34 +1,41 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:snow_indicator/domain/entities/city.dart';
 import 'chose_background_dialog.dart';
 
 class CityInfoWidget extends StatefulWidget {
-  final String title;
+  final City city;
 
-  const CityInfoWidget({Key? key, required this.title}) : super(key: key);
+  const CityInfoWidget({Key? key, required this.city}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => CityInfoState(title);
+  State<StatefulWidget> createState() => CityInfoState(city);
 }
 
 class CityInfoState extends State<CityInfoWidget>
     with SingleTickerProviderStateMixin {
   File? _bg;
-  final String _title;
+  final City _city;
   late AnimationController _controller;
 
-  CityInfoState(this._title);
+  CityInfoState(this._city);
+
+  Duration _getDuration() {
+    if (_city.snowiness == 0) {
+      return const Duration(milliseconds: 10000);
+    } else {
+      return Duration(milliseconds: 10000 ~/ _city.snowiness);
+    }
+  }
 
   Future _showChoseBackgroundDialog(BuildContext ctx) async {
-    final path = await showDialog(
+    final path = await showDialog<String?>(
       context: ctx,
       builder: (_) => const ChoseBackgroundDialog(),
     );
     _bg = null;
-    if (path is String?) {
-      if (path != null) {
-        _bg = File(path);
-      }
+    if (path != null) {
+      _bg = File(path);
     }
     setState(() {});
   }
@@ -47,7 +54,7 @@ class CityInfoState extends State<CityInfoWidget>
 
   Align _getSnowiness() => Align(
         child: Text(
-          "24",
+          _city.snowiness.toString(),
           style: TextStyle(
               fontSize: 54,
               color: Colors.lightBlueAccent,
@@ -79,7 +86,7 @@ class CityInfoState extends State<CityInfoWidget>
   @override
   void initState() {
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 1000),
+      duration: _getDuration(),
       vsync: this,
     );
     _controller.repeat();
@@ -96,7 +103,7 @@ class CityInfoState extends State<CityInfoWidget>
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(_title),
+          title: Text(_city.name),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.add_photo_alternate),
