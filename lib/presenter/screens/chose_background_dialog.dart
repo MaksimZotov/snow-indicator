@@ -29,7 +29,7 @@ class ChoseBackgroundDialog extends StatelessWidget {
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.all(padding),
-                child: Text(
+                child: const Text(
                   'Do you want to set background?',
                   style: TextStyle(fontSize: 18.0),
                 ),
