@@ -82,6 +82,53 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
             arguments: _cities[index],
           );
         },
+        onLongPress: () => showDialog(
+          context: ctx,
+          builder: (BuildContext ctx) {
+            const padding = 10.0;
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              //this right here
+              child: Wrap(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(padding),
+                        child: Text(
+                          'Do you want to remove ${_cities[index].name}?',
+                          style: const TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(padding),
+                        child: ElevatedButton(
+                          child: const Text('Yes'),
+                          onPressed: () {
+                            _removeCity(index);
+                            Navigator.of(ctx).pop();
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(padding),
+                        child: ElevatedButton(
+                          child: const Text('No'),
+                          onPressed: () {
+                            Navigator.of(ctx).pop();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
