@@ -14,6 +14,18 @@ class SearchCityState extends State<SearchCityWidget> {
   final logic = SearchCityLogic();
 
   @override
+  void initState() {
+    logic.addListener(_update);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    logic.removeListener(_update);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
@@ -72,5 +84,9 @@ class SearchCityState extends State<SearchCityWidget> {
             },
           ),
         ));
+  }
+
+  void _update() {
+    setState(() { });
   }
 }
