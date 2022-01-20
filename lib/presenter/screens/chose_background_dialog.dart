@@ -7,17 +7,6 @@ class ChoseBackgroundDialog extends StatelessWidget {
 
   const ChoseBackgroundDialog({Key? key}) : super(key: key);
 
-  Future _pickImage(BuildContext ctx, ImageSource imageSource) async {
-    late final String? path;
-    try {
-      final image = await ImagePicker().pickImage(source: imageSource);
-      path = image?.path;
-      Navigator.of(ctx).pop<String?>(path);
-    } on PlatformException {
-      Navigator.of(ctx).pop<String?>(path);
-    }
-  }
-
   @override
   Widget build(BuildContext ctx) {
     return Dialog(
@@ -75,5 +64,16 @@ class ChoseBackgroundDialog extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future _pickImage(BuildContext ctx, ImageSource imageSource) async {
+    late final String? path;
+    try {
+      final image = await ImagePicker().pickImage(source: imageSource);
+      path = image?.path;
+      Navigator.of(ctx).pop<String?>(path);
+    } on PlatformException {
+      Navigator.of(ctx).pop<String?>(path);
+    }
   }
 }

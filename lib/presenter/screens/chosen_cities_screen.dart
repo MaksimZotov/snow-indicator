@@ -4,6 +4,7 @@ import 'package:snow_indicator/di/assemble.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/presenter/logic/chosen_cities_logic.dart';
 import 'package:snow_indicator/presenter/navigation/route_generator.dart';
+import 'package:snow_indicator/presenter/screens/base/base_state.dart';
 
 class ChosenCitiesWidget extends StatefulWidget {
   const ChosenCitiesWidget({Key? key}) : super(key: key);
@@ -13,44 +14,23 @@ class ChosenCitiesWidget extends StatefulWidget {
 }
 
 @injectable
-class ChosenCitiesState extends State<ChosenCitiesWidget> {
+class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
   final ChosenCitiesLogic _logic;
+
   ChosenCitiesState(this._logic);
 
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
 
-  Future _searchCity(BuildContext ctx) async {
-    final addedCity = await Navigator.of(ctx).pushNamed(
-      Routes.toSearchCity,
-    );
-    if (addedCity != null && addedCity is City?) {
-      _addCity(addedCity as City);
-    }
-  }
-
-  void _addCity(City city) {
-    _listKey.currentState?.insertItem(_logic.cities.length);
-    _logic.addCity(city);
-  }
-
-  void _removeCity(int index) {
-    _listKey.currentState?.removeItem(
-      index,
-      (ctx, anim) => _getCityWidget(ctx, index, anim),
-    );
-    _logic.removeCity(index);
-  }
-
   @override
   void initState() {
-    _logic.addListener(_update);
+    _logic.addListener(update);
     _logic.getChosenCities();
     super.initState();
   }
 
   @override
   void dispose() {
-    _logic.removeListener(_update);
+    _logic.removeListener(update);
     super.dispose();
   }
 
@@ -150,7 +130,25 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
     );
   }
 
-  void _update() {
-    setState(() {});
+  Future _searchCity(BuildContext ctx) async {
+    final addedCity = await Navigator.of(ctx).pushNamed(
+      Routes.toSearchCity,
+    );
+    if (addedCity != null && addedCity is City?) {
+      _addCity(addedCity as City);
+    }
+  }
+
+  void _addCity(City city) {
+    _listKey.currentState?.insertItem(_logic.cities.length);
+    _logic.addCity(city);
+  }
+
+  void _removeCity(int index) {
+    _listKey.currentState?.removeItem(
+      index,
+          (ctx, anim) => _getCityWidget(ctx, index, anim),
+    );
+    _logic.removeCity(index);
   }
 }

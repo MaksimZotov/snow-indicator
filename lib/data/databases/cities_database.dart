@@ -13,16 +13,16 @@ class CitiesDatabase {
   late final CityConverter _cityConverter;
   Database? _databaseNullable;
 
+  CitiesDatabase(CityConverter cityConverter) {
+    _cityConverter = cityConverter;
+  }
+
   Future<Database> get _database async {
     if (_databaseNullable != null) {
       return _databaseNullable!;
     }
     _databaseNullable = await _initDB(_pathToDB);
     return _databaseNullable!;
-  }
-
-  CitiesDatabase(CityConverter cityConverter) {
-    _cityConverter = cityConverter;
   }
 
   Future<Database> _initDB(String filePath) async {

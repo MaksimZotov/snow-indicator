@@ -3,9 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:snow_indicator/di/annotations.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/domain/usecases/update_city_usecase.dart';
+import 'package:snow_indicator/presenter/logic/base/base_logic.dart';
 
 @injectableWithParameters
-class CityInfoLogic extends ChangeNotifier {
+class CityInfoLogic extends BaseLogic {
   UpdateCityUseCase updateCityUseCase;
   City _city;
 
@@ -28,20 +29,15 @@ class CityInfoLogic extends ChangeNotifier {
 
   Future setBackground({String? image}) async {
     if (image != _city.image) {
-      _update(() {
+      update(() {
         _isLoading = true;
       });
       _city = _city.copy(image: image);
       updateCityUseCase.updateCity(_city);
       _bg = _city.image != null ? File(_city.image!) : null;
-      _update(() {
+      update(() {
         _isLoading = false;
       });
     }
-  }
-
-  void _update(VoidCallback callback) {
-    callback();
-    notifyListeners();
   }
 }

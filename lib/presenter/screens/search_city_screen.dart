@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:snow_indicator/di/assemble.dart';
 import 'package:snow_indicator/presenter/logic/search_city_logic.dart';
+import 'package:snow_indicator/presenter/screens/base/base_state.dart';
 
 class SearchCityWidget extends StatefulWidget {
   const SearchCityWidget({Key? key}) : super(key: key);
@@ -11,8 +12,9 @@ class SearchCityWidget extends StatefulWidget {
 }
 
 @injectable
-class SearchCityState extends State<SearchCityWidget> {
+class SearchCityState extends BaseState<SearchCityWidget> {
   final SearchCityLogic _logic;
+
   SearchCityState(this._logic);
 
   Icon customIcon = const Icon(Icons.search);
@@ -20,14 +22,14 @@ class SearchCityState extends State<SearchCityWidget> {
 
   @override
   void initState() {
-    _logic.addListener(_update);
+    _logic.addListener(update);
     _logic.filterCities("");
     super.initState();
   }
 
   @override
   void dispose() {
-    _logic.removeListener(_update);
+    _logic.removeListener(update);
     super.dispose();
   }
 
@@ -90,9 +92,5 @@ class SearchCityState extends State<SearchCityWidget> {
             },
           ),
         ));
-  }
-
-  void _update() {
-    setState(() { });
   }
 }

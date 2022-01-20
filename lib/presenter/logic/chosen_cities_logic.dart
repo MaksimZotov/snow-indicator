@@ -4,9 +4,10 @@ import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/domain/usecases/add_city_usecase.dart';
 import 'package:snow_indicator/domain/usecases/get_chosen_cities_usecase.dart';
 import 'package:snow_indicator/domain/usecases/remove_city_usecase.dart';
+import 'package:snow_indicator/presenter/logic/base/base_logic.dart';
 
 @injectable
-class ChosenCitiesLogic extends ChangeNotifier {
+class ChosenCitiesLogic extends BaseLogic {
   AddCityUseCase addCityUseCase;
   GetChosenCitiesUseCase getChosenCitiesUseCase;
   RemoveCityUseCase removeCityUseCase;
@@ -24,27 +25,22 @@ class ChosenCitiesLogic extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   Future getChosenCities() async {
-    _update(() => _isLoading = true);
+    update(() => _isLoading = true);
     _cities = await getChosenCitiesUseCase.getChosenCities();
-    _update(() => _isLoading = false);
+    update(() => _isLoading = false);
   }
 
   void addCity(City city) {
-    _update(() {
+    update(() {
       _cities.add(city);
     });
     addCityUseCase.addCity(city);
   }
 
   void removeCity(int index) {
-    _update(() {
+    update(() {
       _cities.removeAt(index);
     });
     removeCityUseCase.removeCity(cities[index].id!);
-  }
-
-  void _update(VoidCallback callback) {
-    callback();
-    notifyListeners();
   }
 }

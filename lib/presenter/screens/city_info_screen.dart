@@ -3,6 +3,7 @@ import 'package:snow_indicator/di/annotations.dart';
 import 'package:snow_indicator/di/assemble.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/presenter/logic/city_info_logic.dart';
+import 'package:snow_indicator/presenter/screens/base/base_state.dart';
 import 'chose_background_dialog.dart';
 
 class CityInfoWidget extends StatefulWidget {
@@ -16,7 +17,7 @@ class CityInfoWidget extends StatefulWidget {
 }
 
 @injectableWithParameters
-class CityInfoState extends State<CityInfoWidget>
+class CityInfoState extends BaseState<CityInfoWidget>
     with SingleTickerProviderStateMixin {
   late final CityInfoLogic _logic;
 
@@ -26,60 +27,9 @@ class CityInfoState extends State<CityInfoWidget>
 
   late final AnimationController _controller;
 
-  Future _showChoseBackgroundDialog(BuildContext ctx) async {
-    final image = await showDialog<String?>(
-      context: ctx,
-      builder: (_) => const ChoseBackgroundDialog(),
-    );
-    await _logic.setBackground(image: image);
-  }
-
-  Container _getBackground() => Container(
-        child: _logic.bg != null
-            ? Image.file(
-                _logic.bg!,
-                fit: BoxFit.cover,
-                height: double.infinity,
-                width: double.infinity,
-                alignment: Alignment.center,
-              )
-            : null,
-      );
-
-  Align _getSnowiness() => Align(
-        child: Text(
-          _logic.city.snowiness.toString(),
-          style: TextStyle(
-              fontSize: 54,
-              color: Colors.lightBlueAccent,
-              background: Paint()
-                ..color = Colors.blue
-                ..style = PaintingStyle.stroke),
-        ),
-      );
-
-  Positioned _getSnowflake({
-    double? top,
-    double? right,
-    double? bottom,
-    double? left,
-  }) =>
-      Positioned(
-        top: top,
-        right: right,
-        bottom: bottom,
-        left: left,
-        child: RotationTransition(
-          turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
-          child: const Image(
-            image: AssetImage('assets/images/snowflake.png'),
-          ),
-        ),
-      );
-
   @override
   void initState() {
-    _logic.addListener(_update);
+    _logic.addListener(update);
     _controller = AnimationController(
       duration: _logic.getDuration(),
       vsync: this,
@@ -91,7 +41,7 @@ class CityInfoState extends State<CityInfoWidget>
 
   @override
   void dispose() {
-    _logic.removeListener(_update);
+    _logic.removeListener(update);
     _controller.dispose();
     super.dispose();
   }
@@ -123,7 +73,54 @@ class CityInfoState extends State<CityInfoWidget>
               ));
   }
 
-  void _update() {
-    setState(() {});
+  Future _showChoseBackgroundDialog(BuildContext ctx) async {
+    final image = await showDialog<String?>(
+      context: ctx,
+      builder: (_) => const ChoseBackgroundDialog(),
+    );
+    await _logic.setBackground(image: image);
   }
+
+  Container _getBackground() => Container(
+    child: _logic.bg != null
+        ? Image.file(
+      _logic.bg!,
+      fit: BoxFit.cover,
+      height: double.infinity,
+      width: double.infinity,
+      alignment: Alignment.center,
+    )
+        : null,
+  );
+
+  Align _getSnowiness() => Align(
+    child: Text(
+      _logic.city.snowiness.toString(),
+      style: TextStyle(
+          fontSize: 54,
+          color: Colors.lightBlueAccent,
+          background: Paint()
+            ..color = Colors.blue
+            ..style = PaintingStyle.stroke),
+    ),
+  );
+
+  Positioned _getSnowflake({
+    double? top,
+    double? right,
+    double? bottom,
+    double? left,
+  }) =>
+      Positioned(
+        top: top,
+        right: right,
+        bottom: bottom,
+        left: left,
+        child: RotationTransition(
+          turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
+          child: const Image(
+            image: AssetImage('assets/images/snowflake.png'),
+          ),
+        ),
+      );
 }
