@@ -23,6 +23,7 @@ void setup() {
   );
 }
 
+// Class for providing of instances
 @module
 abstract class AssembleModule {}
 
