@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snow_indicator/di/assemble.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/presenter/logic/chosen_cities_logic.dart';
 import 'package:snow_indicator/presenter/navigation/route_generator.dart';
@@ -7,12 +8,14 @@ class ChosenCitiesWidget extends StatefulWidget {
   const ChosenCitiesWidget({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => ChosenCitiesState();
+  State<StatefulWidget> createState() => assemble.chosenCitiesState;
 }
 
 class ChosenCitiesState extends State<ChosenCitiesWidget> {
+  final ChosenCitiesLogic _logic;
+  ChosenCitiesState(this._logic);
+
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  final logic = ChosenCitiesLogic();
 
   Future _searchCity(BuildContext ctx) async {
     final addedCity = await Navigator.of(ctx).pushNamed(
@@ -24,8 +27,8 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
   }
 
   void _addCity(City city) {
-    _listKey.currentState?.insertItem(logic.cities.length);
-    logic.addCity(city);
+    _listKey.currentState?.insertItem(_logic.cities.length);
+    _logic.addCity(city);
   }
 
   void _removeCity(int index) {
@@ -33,20 +36,19 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
       index,
       (ctx, anim) => _getCityWidget(ctx, index, anim),
     );
-    logic.removeCity(index);
+    _logic.removeCity(index);
   }
 
   @override
   void initState() {
     super.initState();
-    logic.addListener(_update);
-    logic.loadCities();
+    _logic.addListener(_update);
+    _logic.getChosenCities();
   }
 
   @override
   void dispose() {
-    logic.removeListener(_update);
-    logic.closeDatabase();
+    _logic.removeListener(_update);
     super.dispose();
   }
 
@@ -56,7 +58,7 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
       appBar: AppBar(
         title: const Text("Chosen Cities"),
       ),
-      body: logic.isLoading
+      body: _logic.isLoading
           ? const Center(
               child: CircularProgressIndicator(),
             )
@@ -64,7 +66,7 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
               key: _listKey,
               itemBuilder: (ctx, index, anim) =>
                   _getCityWidget(ctx, index, anim),
-              initialItemCount: logic.cities.length,
+              initialItemCount: _logic.cities.length,
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -85,15 +87,15 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
         ),
       ),
       child: ListTile(
-        title: Text(logic.cities[index].name),
-        subtitle: Text("Snowiness: ${logic.cities[index].snowiness}"),
+        title: Text(_logic.cities[index].name),
+        subtitle: Text("Snowiness: ${_logic.cities[index].snowiness}"),
         leading: const Image(
           image: AssetImage('assets/images/snowflake.png'),
         ),
         onTap: () {
           Navigator.of(ctx).pushNamed(
             Routes.toCityInfo,
-            arguments: logic.cities[index],
+            arguments: _logic.cities[index],
           );
         },
         onLongPress: () => showDialog(
@@ -112,7 +114,7 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
                       Padding(
                         padding: const EdgeInsets.all(padding),
                         child: Text(
-                          'Do you want to remove ${logic.cities[index].name}?',
+                          'Do you want to remove ${_logic.cities[index].name}?',
                           style: const TextStyle(fontSize: 18.0),
                         ),
                       ),

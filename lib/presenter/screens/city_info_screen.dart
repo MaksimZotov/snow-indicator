@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snow_indicator/di/assemble.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/presenter/logic/city_info_logic.dart';
 import 'chose_background_dialog.dart';
@@ -9,31 +10,31 @@ class CityInfoWidget extends StatefulWidget {
   const CityInfoWidget({Key? key, required this.city}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => CityInfoState(city: city);
+  State<StatefulWidget> createState() => CityInfoState(city);
 }
 
 class CityInfoState extends State<CityInfoWidget>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final CityInfoLogic logic;
-
-  CityInfoState({required City city}){
-    logic = CityInfoLogic(city);
+  late final CityInfoLogic _logic;
+  CityInfoState(City city) {
+    _logic = assemble.getCityInfoLogicWithParam(city);
   }
 
+  late final AnimationController _controller;
+
   Future _showChoseBackgroundDialog(BuildContext ctx) async {
-    logic.city.image = await showDialog<String?>(
+    _logic.city.image = await showDialog<String?>(
       context: ctx,
       builder: (_) => const ChoseBackgroundDialog(),
     );
-    logic.updateCity();
-    await logic.setBackground();
+    _logic.updateCity();
+    await _logic.setBackground();
   }
 
   Container _getBackground() => Container(
-        child: logic.bg != null
+        child: _logic.bg != null
             ? Image.file(
-                logic.bg!,
+                _logic.bg!,
                 fit: BoxFit.cover,
                 height: double.infinity,
                 width: double.infinity,
@@ -44,7 +45,7 @@ class CityInfoState extends State<CityInfoWidget>
 
   Align _getSnowiness() => Align(
         child: Text(
-          logic.city.snowiness.toString(),
+          _logic.city.snowiness.toString(),
           style: TextStyle(
               fontSize: 54,
               color: Colors.lightBlueAccent,
@@ -75,19 +76,19 @@ class CityInfoState extends State<CityInfoWidget>
 
   @override
   void initState() {
-    logic.addListener(_update);
+    _logic.addListener(_update);
     _controller = AnimationController(
-      duration: logic.getDuration(),
+      duration: _logic.getDuration(),
       vsync: this,
     );
     _controller.repeat();
-    logic.setBackground();
+    _logic.setBackground();
     super.initState();
   }
 
   @override
   void dispose() {
-    logic.removeListener(_update);
+    _logic.removeListener(_update);
     _controller.dispose();
     super.dispose();
   }
@@ -96,7 +97,7 @@ class CityInfoState extends State<CityInfoWidget>
   Widget build(BuildContext ctx) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(logic.city.name),
+          title: Text(_logic.city.name),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.add_photo_alternate),
@@ -104,7 +105,7 @@ class CityInfoState extends State<CityInfoWidget>
             ),
           ],
         ),
-        body: logic.isLoading
+        body: _logic.isLoading
             ? const CircularProgressIndicator()
             : Stack(
                 fit: StackFit.expand,

@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:snow_indicator/di/assemble.dart';
 import 'package:snow_indicator/presenter/logic/search_city_logic.dart';
 
 class SearchCityWidget extends StatefulWidget {
   const SearchCityWidget({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => SearchCityState();
+  State<StatefulWidget> createState() => assemble.searchCityState;
 }
 
 class SearchCityState extends State<SearchCityWidget> {
+  final SearchCityLogic _logic;
+  SearchCityState(this._logic);
+
   Icon customIcon = const Icon(Icons.search);
   Widget customSearchBar = const Text('SearchCity');
-  final logic = SearchCityLogic();
 
   @override
   void initState() {
-    logic.addListener(_update);
+    _logic.addListener(_update);
+    _logic.filterCities("");
     super.initState();
   }
 
   @override
   void dispose() {
-    logic.removeListener(_update);
+    _logic.removeListener(_update);
     super.dispose();
   }
 
@@ -40,7 +44,7 @@ class SearchCityState extends State<SearchCityWidget> {
                     customSearchBar = ListTile(
                       title: TextField(
                         onChanged: (text) {
-                          logic.filterCities(text);
+                          _logic.filterCities(text);
                         },
                         decoration: const InputDecoration(
                           hintText: 'Some city...',
@@ -67,20 +71,20 @@ class SearchCityState extends State<SearchCityWidget> {
           ],
         ),
         body: ListView.separated(
-          itemCount: logic.cities.length,
+          itemCount: _logic.cities.length,
           separatorBuilder: (BuildContext ctx, int index) => const Divider(
             indent: 8,
             endIndent: 8,
             color: Colors.grey,
           ),
           itemBuilder: (BuildContext context, int index) => ListTile(
-            title: Text(logic.cities[index].name),
-            subtitle: Text("Snowiness: ${logic.cities[index].snowiness}"),
+            title: Text(_logic.cities[index].name),
+            subtitle: Text("Snowiness: ${_logic.cities[index].snowiness}"),
             leading: const Image(
               image: AssetImage('assets/images/snowflake.png'),
             ),
             onTap: () {
-              Navigator.of(ctx).pop(logic.cities[index]);
+              Navigator.of(ctx).pop(_logic.cities[index]);
             },
           ),
         ));

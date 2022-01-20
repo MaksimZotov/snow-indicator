@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 
 class CityFields {
@@ -10,8 +11,9 @@ class CityFields {
   static const String time = 'time';
 }
 
+@injectable
 class CityConverter {
-  static City fromJson(Map<String, Object?> json) => City(
+  City fromJson(Map<String, Object?> json) => City(
     id: json[CityFields.id] as int?,
     name: json[CityFields.name] as String,
     snowiness: json[CityFields.snowiness] as double,
@@ -19,7 +21,7 @@ class CityConverter {
     time: DateTime.parse(json[CityFields.time] as String),
   );
 
-  static Map<String, Object?> toJson(City city) => {
+  Map<String, Object?> toJson(City city) => {
     CityFields.id: city.id,
     CityFields.name: city.name,
     CityFields.snowiness: city.snowiness,

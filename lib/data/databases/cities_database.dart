@@ -1,32 +1,27 @@
+import 'package:injectable/injectable.dart';
 import 'package:path/path.dart';
 import 'package:snow_indicator/data/converters/city_converter.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../domain/entities/city.dart';
 
-class Tables {
-  static const String cities = 'cities';
-}
-
+@lazySingleton
 class CitiesDatabase {
-  static final CitiesDatabase instance = CitiesDatabase._init();
+  static const String _citiesDB = 'cities';
+  static const _pathToDB = 'cities.db';
 
-  static Database? _database;
+  late final CityConverter _cityConverter;
+  late final Database _database;
 
-  CitiesDatabase._init();
-
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-
-    _database = await _initDB('cities.db');
-    return _database!;
+  CitiesDatabase(CityConverter cityConverter) {
+    _cityConverter = cityConverter;
+    _initDB(_pathToDB);
   }
 
-  Future<Database> _initDB(String filePath) async {
+  Future _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    _database = await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
@@ -36,7 +31,7 @@ class CitiesDatabase {
     const textOrNullType = 'TEXT';
 
     await db.execute('''
-      CREATE TABLE ${Tables.cities} ( 
+      CREATE TABLE $_citiesDB ( 
         ${CityFields.id} $idType, 
         ${CityFields.name} $textType,
         ${CityFields.snowiness} $realType,
@@ -47,54 +42,49 @@ class CitiesDatabase {
   }
 
   Future<City> create(City city) async {
-    final db = await instance.database;
-    final id = await db.insert(Tables.cities, CityConverter.toJson(city));
+    final id =
+        await _database.insert(_citiesDB, _cityConverter.toJson(city));
     return city.copy(id: id);
   }
 
   Future<City> readCity(int id) async {
-    final db = await instance.database;
-    final maps = await db.query(
-      Tables.cities,
+    final maps = await _database.query(
+      _citiesDB,
       columns: CityFields.values,
       where: '${CityFields.id} = ?',
       whereArgs: [id],
     );
     if (maps.isNotEmpty) {
-      return CityConverter.fromJson(maps.first);
+      return _cityConverter.fromJson(maps.first);
     } else {
       throw Exception('ID $id is not found');
     }
   }
 
   Future<List<City>> readAllCities() async {
-    final db = await instance.database;
     const orderBy = '${CityFields.time} ASC';
-    final result = await db.query(Tables.cities, orderBy: orderBy);
-    return result.map((json) => CityConverter.fromJson(json)).toList();
+    final result = await _database.query(_citiesDB, orderBy: orderBy);
+    return result.map((json) => _cityConverter.fromJson(json)).toList();
   }
 
   Future<int> update(City city) async {
-    final db = await instance.database;
-    return db.update(
-      Tables.cities,
-      CityConverter.toJson(city),
+    return _database.update(
+      _citiesDB,
+      _cityConverter.toJson(city),
       where: '${CityFields.id} = ?',
       whereArgs: [city.id],
     );
   }
 
   Future<int> delete(int id) async {
-    final db = await instance.database;
-    return await db.delete(
-      Tables.cities,
+    return await _database.delete(
+      _citiesDB,
       where: '${CityFields.id} = ?',
       whereArgs: [id],
     );
   }
 
   Future close() async {
-    final db = await instance.database;
-    db.close();
+    _database.close();
   }
 }

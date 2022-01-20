@@ -1,14 +1,18 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:snow_indicator/data/databases/database.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
+import 'package:snow_indicator/domain/usecases/update_city_usecase.dart';
 
 class CityInfoLogic extends ChangeNotifier {
-  bool _isLoading = false;
-  final City _city;
-  File? _bg;
+  UpdateCityUseCase updateCityUseCase;
 
-  CityInfoLogic(this._city);
+  CityInfoLogic(this.updateCityUseCase, {required City city}) {
+    _city = city;
+  }
+
+  bool _isLoading = false;
+  late final City _city;
+  File? _bg;
 
   bool get isLoading => _isLoading;
   City get city => _city;
@@ -29,7 +33,7 @@ class CityInfoLogic extends ChangeNotifier {
   }
 
   void updateCity() {
-    CitiesDatabase.instance.update(city);
+    updateCityUseCase.updateCity(_city);
   }
 
   void _update(VoidCallback callback) {
