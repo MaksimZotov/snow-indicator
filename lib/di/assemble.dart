@@ -5,6 +5,7 @@ import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/domain/usecases/get_city_usecase.dart';
 import 'package:snow_indicator/domain/usecases/update_city_usecase.dart';
 import 'package:snow_indicator/presenter/logic/city_info_logic.dart';
+import 'package:snow_indicator/presenter/screens/app_screen.dart';
 import 'package:snow_indicator/presenter/screens/chosen_cities_screen.dart';
 import 'package:snow_indicator/presenter/screens/city_info_screen.dart';
 import 'package:snow_indicator/presenter/screens/search_city_screen.dart';
@@ -36,6 +37,8 @@ class Assemble {
   const Assemble._();
 
   CityConverter get cityConverter => getIt.get<CityConverter>();
+
+  AppState get appState => getIt.get<AppState>();
 
   ChosenCitiesState get chosenCitiesState => getIt.get<ChosenCitiesState>();
 

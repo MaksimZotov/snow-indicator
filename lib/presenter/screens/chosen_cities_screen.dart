@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:snow_indicator/di/assemble.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
+import 'package:snow_indicator/presenter/logic/app_logic.dart';
 import 'package:snow_indicator/presenter/logic/chosen_cities_logic.dart';
 import 'package:snow_indicator/presenter/navigation/route_generator.dart';
 import 'package:snow_indicator/presenter/screens/base/base_state.dart';
@@ -16,8 +17,9 @@ class ChosenCitiesWidget extends StatefulWidget {
 @injectable
 class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
   final ChosenCitiesLogic _logic;
+  final AppLogic _appLogic;
 
-  ChosenCitiesState(this._logic);
+  ChosenCitiesState(this._logic, this._appLogic);
 
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
 
@@ -27,6 +29,7 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
     _logic.addListener(update);
     _logic.addCityNotifier.addListener(_animateCityAdding);
     _logic.removeCityByIndexNotifier.addListener(_animateCityRemoving);
+    _appLogic.addListener(update);
     super.initState();
   }
 
@@ -35,6 +38,7 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
     _logic.removeListener(update);
     _logic.addCityNotifier.removeListener(_animateCityAdding);
     _logic.removeCityByIndexNotifier.removeListener(_animateCityRemoving);
+    _appLogic.removeListener(update);
     super.dispose();
   }
 
@@ -43,6 +47,14 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Chosen Cities"),
+        actions: [
+          Switch(
+            value: _appLogic.darkTheme,
+            onChanged: (darkTheme) {
+              _appLogic.setDarkTheme(darkTheme);
+            },
+          )
+        ],
       ),
       body: _logic.isLoading
           ? const Center(
