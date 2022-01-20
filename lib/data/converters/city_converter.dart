@@ -2,6 +2,8 @@ import 'package:injectable/injectable.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 
 class CityFields {
+  CityFields._();
+
   static final List<String> values = [id, name, snowiness, image, time];
 
   static const String id = '_id';
