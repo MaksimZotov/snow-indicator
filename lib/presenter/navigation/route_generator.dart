@@ -5,12 +5,16 @@ import 'package:snow_indicator/presenter/screens/city_info_screen.dart';
 import 'package:snow_indicator/presenter/screens/search_city_screen.dart';
 
 class Routes {
+  Routes._();
+
   static const String toChosenCities = 'toChosenCities';
   static const String toCityInfo = 'toCityInfo';
   static const String toSearchCity = 'toSearchCity';
 }
 
 class RouteGenerator {
+  RouteGenerator._();
+
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final route = settings.name;
     final args = settings.arguments;

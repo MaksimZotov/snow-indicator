@@ -5,17 +5,16 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../domain/entities/city.dart';
 
-@lazySingleton
+@singleton
 class CitiesDatabase {
-  static const String _citiesDB = 'cities';
-  static const _pathToDB = 'cities.db';
+  final String _citiesDB = 'cities';
+  final _pathToDB = 'cities.db';
 
   late final CityConverter _cityConverter;
-  Database? _databaseNullable;
+  late final CityFields _cityFields;
+  CitiesDatabase(this._cityConverter, this._cityFields);
 
-  CitiesDatabase(CityConverter cityConverter) {
-    _cityConverter = cityConverter;
-  }
+  Database? _databaseNullable;
 
   Future<Database> get _database async {
     if (_databaseNullable != null) {
@@ -39,11 +38,11 @@ class CitiesDatabase {
 
     await db.execute('''
       CREATE TABLE $_citiesDB ( 
-        ${CityFields.id} $idType, 
-        ${CityFields.name} $textType,
-        ${CityFields.snowiness} $realType,
-        ${CityFields.image} $textOrNullType,
-        ${CityFields.time} $textType
+        ${_cityFields.id} $idType, 
+        ${_cityFields.name} $textType,
+        ${_cityFields.snowiness} $realType,
+        ${_cityFields.image} $textOrNullType,
+        ${_cityFields.time} $textType
         )
       ''');
   }
@@ -59,8 +58,8 @@ class CitiesDatabase {
     final db = await _database;
     final maps = await db.query(
       _citiesDB,
-      columns: CityFields.values,
-      where: '${CityFields.id} = ?',
+      columns: _cityFields.values,
+      where: '${_cityFields.id} = ?',
       whereArgs: [id],
     );
     if (maps.isNotEmpty) {
@@ -72,7 +71,7 @@ class CitiesDatabase {
 
   Future<List<City>> readAllCities() async {
     final db = await _database;
-    const orderBy = '${CityFields.time} ASC';
+    final orderBy = '${_cityFields.time} ASC';
     final result = await db.query(_citiesDB, orderBy: orderBy);
     return result.map((json) => _cityConverter.fromJson(json)).toList();
   }
@@ -82,7 +81,7 @@ class CitiesDatabase {
     return db.update(
       _citiesDB,
       _cityConverter.toJson(city),
-      where: '${CityFields.id} = ?',
+      where: '${_cityFields.id} = ?',
       whereArgs: [city.id],
     );
   }
@@ -91,7 +90,7 @@ class CitiesDatabase {
     final db = await _database;
     return await db.delete(
       _citiesDB,
-      where: '${CityFields.id} = ?',
+      where: '${_cityFields.id} = ?',
       whereArgs: [id],
     );
   }
