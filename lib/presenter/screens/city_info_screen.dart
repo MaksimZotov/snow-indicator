@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 import 'package:snow_indicator/di/assemble.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/presenter/logic/city_info_logic.dart';
@@ -10,12 +11,14 @@ class CityInfoWidget extends StatefulWidget {
   const CityInfoWidget({Key? key, required this.city}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => CityInfoState(city);
+  State<StatefulWidget> createState() =>
+      assemble.getCityInfoStateWithParam(city);
 }
 
 class CityInfoState extends State<CityInfoWidget>
     with SingleTickerProviderStateMixin {
   late final CityInfoLogic _logic;
+
   CityInfoState(City city) {
     _logic = assemble.getCityInfoLogicWithParam(city);
   }
@@ -121,6 +124,6 @@ class CityInfoState extends State<CityInfoWidget>
   }
 
   void _update() {
-    setState(() { });
+    setState(() {});
   }
 }

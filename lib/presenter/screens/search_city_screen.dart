@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 import 'package:snow_indicator/di/assemble.dart';
 import 'package:snow_indicator/presenter/logic/search_city_logic.dart';
 
@@ -9,6 +10,7 @@ class SearchCityWidget extends StatefulWidget {
   State<StatefulWidget> createState() => assemble.searchCityState;
 }
 
+@injectable
 class SearchCityState extends State<SearchCityWidget> {
   final SearchCityLogic _logic;
   SearchCityState(this._logic);

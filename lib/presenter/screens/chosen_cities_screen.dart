@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 import 'package:snow_indicator/di/assemble.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/presenter/logic/chosen_cities_logic.dart';
@@ -11,6 +12,7 @@ class ChosenCitiesWidget extends StatefulWidget {
   State<StatefulWidget> createState() => assemble.chosenCitiesState;
 }
 
+@injectable
 class ChosenCitiesState extends State<ChosenCitiesWidget> {
   final ChosenCitiesLogic _logic;
   ChosenCitiesState(this._logic);
@@ -41,9 +43,9 @@ class ChosenCitiesState extends State<ChosenCitiesWidget> {
 
   @override
   void initState() {
-    super.initState();
     _logic.addListener(_update);
     _logic.getChosenCities();
+    super.initState();
   }
 
   @override
