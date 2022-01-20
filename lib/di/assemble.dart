@@ -13,7 +13,15 @@ import 'assemble.config.dart';
 final getIt = GetIt.I;
 
 @InjectableInit()
-void setup() => $initGetIt(getIt);
+void setup() {
+  $initGetIt(getIt);
+  getIt.registerFactoryParam<CityInfoLogic, City, void>(
+    (city, _) => CityInfoLogic(getIt.get<UpdateCityUseCase>(), city),
+  );
+  getIt.registerFactoryParam<CityInfoState, City, void>(
+    (city, _) => CityInfoState(city),
+  );
+}
 
 @module
 abstract class AssembleModule {}
@@ -27,12 +35,11 @@ class Assemble {
 
   SearchCityState get searchCityState => getIt.get<SearchCityState>();
 
-  CityInfoState getCityInfoStateWithParam(City city) => CityInfoState(city);
+  CityInfoState getCityInfoStateWithParam(City city) =>
+      getIt.get<CityInfoState>(param1: city);
 
-  CityInfoLogic getCityInfoLogicWithParam(City city) => CityInfoLogic(
-        getIt.get<UpdateCityUseCase>(),
-        city,
-      );
+  CityInfoLogic getCityInfoLogicWithParam(City city) =>
+      getIt.get<CityInfoLogic>(param1: city);
 }
 
 const assemble = Assemble._();

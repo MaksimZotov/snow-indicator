@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:injectable/injectable.dart';
+import 'package:snow_indicator/di/annotations.dart';
 import 'package:snow_indicator/di/assemble.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/presenter/logic/city_info_logic.dart';
@@ -15,6 +15,7 @@ class CityInfoWidget extends StatefulWidget {
       assemble.getCityInfoStateWithParam(city);
 }
 
+@injectableWithParameters
 class CityInfoState extends State<CityInfoWidget>
     with SingleTickerProviderStateMixin {
   late final CityInfoLogic _logic;

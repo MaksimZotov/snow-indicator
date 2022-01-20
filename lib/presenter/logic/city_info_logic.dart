@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:snow_indicator/di/annotations.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/domain/usecases/update_city_usecase.dart';
 
+@injectableWithParameters
 class CityInfoLogic extends ChangeNotifier {
   UpdateCityUseCase updateCityUseCase;
   City _city;
