@@ -2,7 +2,7 @@ class City {
   final int? id;
   final String name;
   final double snowiness;
-  late String? image;
+  final String? image;
   final DateTime time;
 
   City({

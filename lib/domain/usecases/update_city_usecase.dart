@@ -7,7 +7,7 @@ class UpdateCityUseCase {
   final CitiesDatabase _db;
   UpdateCityUseCase(this._db);
 
-  Future<List<City>> updateCity(City city) async {
-    return await _db.readAllCities();
+  void updateCity(City city)  {
+    _db.update(city);
   }
 }

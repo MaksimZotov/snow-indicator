@@ -5,17 +5,15 @@ import 'package:snow_indicator/domain/usecases/update_city_usecase.dart';
 
 class CityInfoLogic extends ChangeNotifier {
   UpdateCityUseCase updateCityUseCase;
+  City _city;
 
-  CityInfoLogic(this.updateCityUseCase, {required City city}) {
-    _city = city;
-  }
+  CityInfoLogic(this.updateCityUseCase, this._city);
 
   bool _isLoading = false;
-  late final City _city;
   File? _bg;
 
-  bool get isLoading => _isLoading;
   City get city => _city;
+  bool get isLoading => _isLoading;
   File? get bg => _bg;
 
   Duration getDuration() {
@@ -26,14 +24,18 @@ class CityInfoLogic extends ChangeNotifier {
     }
   }
 
-  Future setBackground() async {
-    _update(() { _isLoading = true; });
-    _bg = _city.image != null ? File(_city.image!) : null;
-    _update(() { _isLoading = false; });
-  }
-
-  void updateCity() {
-    updateCityUseCase.updateCity(_city);
+  Future setBackground({String? image}) async {
+    if (image != _city.image) {
+      _update(() {
+        _isLoading = true;
+      });
+      _city = _city.copy(image: image);
+      updateCityUseCase.updateCity(_city);
+      _bg = _city.image != null ? File(_city.image!) : null;
+      _update(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void _update(VoidCallback callback) {

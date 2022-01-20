@@ -31,7 +31,7 @@ class Assemble {
 
   CityInfoLogic getCityInfoLogicWithParam(City city) => CityInfoLogic(
         getIt.get<UpdateCityUseCase>(),
-        city: city,
+        city,
       );
 }
 

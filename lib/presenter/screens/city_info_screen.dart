@@ -26,12 +26,11 @@ class CityInfoState extends State<CityInfoWidget>
   late final AnimationController _controller;
 
   Future _showChoseBackgroundDialog(BuildContext ctx) async {
-    _logic.city.image = await showDialog<String?>(
+    final image = await showDialog<String?>(
       context: ctx,
       builder: (_) => const ChoseBackgroundDialog(),
     );
-    _logic.updateCity();
-    await _logic.setBackground();
+    await _logic.setBackground(image: image);
   }
 
   Container _getBackground() => Container(
