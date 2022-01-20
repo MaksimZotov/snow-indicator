@@ -23,14 +23,18 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
 
   @override
   void initState() {
-    _logic.addListener(update);
     _logic.getChosenCities();
+    _logic.addListener(update);
+    _logic.addCityNotifier.addListener(_animateCityAdding);
+    _logic.removeCityByIndexNotifier.addListener(_animateCityRemoving);
     super.initState();
   }
 
   @override
   void dispose() {
     _logic.removeListener(update);
+    _logic.addCityNotifier.removeListener(_animateCityAdding);
+    _logic.removeCityByIndexNotifier.removeListener(_animateCityRemoving);
     super.dispose();
   }
 
@@ -105,7 +109,7 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
                         child: ElevatedButton(
                           child: const Text('Yes'),
                           onPressed: () {
-                            _removeCity(index);
+                            _logic.removeCity(index);
                             Navigator.of(ctx).pop();
                           },
                         ),
@@ -135,20 +139,19 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
       Routes.toSearchCity,
     );
     if (addedCity != null && addedCity is City?) {
-      _addCity(addedCity as City);
+      _logic.addCity(addedCity as City);
     }
   }
 
-  void _addCity(City city) {
+  void _animateCityAdding() {
     _listKey.currentState?.insertItem(_logic.cities.length);
-    _logic.addCity(city);
   }
 
-  void _removeCity(int index) {
+  void _animateCityRemoving() {
+    final index = _logic.removeCityByIndexNotifier.value;
     _listKey.currentState?.removeItem(
       index,
-          (ctx, anim) => _getCityWidget(ctx, index, anim),
+      (ctx, anim) => _getCityWidget(ctx, index, anim),
     );
-    _logic.removeCity(index);
   }
 }

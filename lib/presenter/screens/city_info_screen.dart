@@ -16,7 +16,7 @@ class CityInfoWidget extends StatefulWidget {
       assemble.getCityInfoStateWithParam(city);
 }
 
-@injectableWithParameters
+@injectableWithDynamicParams
 class CityInfoState extends BaseState<CityInfoWidget>
     with SingleTickerProviderStateMixin {
   late final CityInfoLogic _logic;
@@ -30,12 +30,12 @@ class CityInfoState extends BaseState<CityInfoWidget>
   @override
   void initState() {
     _logic.addListener(update);
+    _logic.getActualCityState();
     _controller = AnimationController(
       duration: _logic.getDuration(),
       vsync: this,
     );
     _controller.repeat();
-    _logic.setBackground();
     super.initState();
   }
 
@@ -59,7 +59,9 @@ class CityInfoState extends BaseState<CityInfoWidget>
           ],
         ),
         body: _logic.isLoading
-            ? const CircularProgressIndicator()
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
             : Stack(
                 fit: StackFit.expand,
                 children: [
@@ -78,32 +80,32 @@ class CityInfoState extends BaseState<CityInfoWidget>
       context: ctx,
       builder: (_) => const ChoseBackgroundDialog(),
     );
-    await _logic.setBackground(image: image);
+    _logic.setBackground(image: image);
   }
 
   Container _getBackground() => Container(
-    child: _logic.bg != null
-        ? Image.file(
-      _logic.bg!,
-      fit: BoxFit.cover,
-      height: double.infinity,
-      width: double.infinity,
-      alignment: Alignment.center,
-    )
-        : null,
-  );
+        child: _logic.bg != null
+            ? Image.file(
+                _logic.bg!,
+                fit: BoxFit.cover,
+                height: double.infinity,
+                width: double.infinity,
+                alignment: Alignment.center,
+              )
+            : null,
+      );
 
   Align _getSnowiness() => Align(
-    child: Text(
-      _logic.city.snowiness.toString(),
-      style: TextStyle(
-          fontSize: 54,
-          color: Colors.lightBlueAccent,
-          background: Paint()
-            ..color = Colors.blue
-            ..style = PaintingStyle.stroke),
-    ),
-  );
+        child: Text(
+          _logic.city.snowiness.toString(),
+          style: TextStyle(
+              fontSize: 54,
+              color: Colors.lightBlueAccent,
+              background: Paint()
+                ..color = Colors.blue
+                ..style = PaintingStyle.stroke),
+        ),
+      );
 
   Positioned _getSnowflake({
     double? top,

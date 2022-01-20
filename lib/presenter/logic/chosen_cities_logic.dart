@@ -8,39 +8,45 @@ import 'package:snow_indicator/presenter/logic/base/base_logic.dart';
 
 @injectable
 class ChosenCitiesLogic extends BaseLogic {
-  AddCityUseCase addCityUseCase;
-  GetChosenCitiesUseCase getChosenCitiesUseCase;
-  RemoveCityUseCase removeCityUseCase;
+  final AddCityUseCase _addCityUseCase;
+  final GetChosenCitiesUseCase _getChosenCitiesUseCase;
+  final RemoveCityUseCase _removeCityUseCase;
 
   ChosenCitiesLogic(
-    this.addCityUseCase,
-    this.getChosenCitiesUseCase,
-    this.removeCityUseCase,
+    this._addCityUseCase,
+    this._getChosenCitiesUseCase,
+    this._removeCityUseCase,
   );
 
-  List<City> _cities = [];
-  bool _isLoading = false;
+  final ChangeNotifier _addCityNotifier = ChangeNotifier();
+  final ValueNotifier<int> _removeCityByIndexNotifier = ValueNotifier(-1);
+  List<City>? _cities;
 
-  List<City> get cities => _cities;
-  bool get isLoading => _isLoading;
+  List<City> get cities =>
+      _cities != null ? _cities! : throw Exception("Cities is null");
+
+  ChangeNotifier get addCityNotifier => _addCityNotifier;
+
+  ValueNotifier<int> get removeCityByIndexNotifier =>
+      _removeCityByIndexNotifier;
 
   Future getChosenCities() async {
-    update(() => _isLoading = true);
-    _cities = await getChosenCitiesUseCase.getChosenCities();
-    update(() => _isLoading = false);
+    showLoading();
+    _cities = await _getChosenCitiesUseCase.getChosenCities();
+    hideLoading();
   }
 
-  void addCity(City city) {
-    update(() {
-      _cities.add(city);
-    });
-    addCityUseCase.addCity(city);
+  Future addCity(City city) async {
+    showLoading();
+    final addedCity = await _addCityUseCase.addCity(city);
+    hideLoading();
+    addCityNotifier.notifyListeners();
+    cities.add(addedCity);
   }
 
-  void removeCity(int index) {
-    update(() {
-      _cities.removeAt(index);
-    });
-    removeCityUseCase.removeCity(cities[index].id!);
+  Future removeCity(int index) async {
+    removeCityByIndexNotifier.value = index;
+    cities.removeAt(index);
+    await _removeCityUseCase.removeCity(cities[index].id!);
   }
 }

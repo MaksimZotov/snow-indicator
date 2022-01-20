@@ -6,7 +6,7 @@ class RemoveCityUseCase {
   final CitiesDatabase _db;
   RemoveCityUseCase(this._db);
 
-  void removeCity(int id) async {
-    _db.delete(id);
+  Future removeCity(int id) async {
+    await _db.delete(id);
   }
 }

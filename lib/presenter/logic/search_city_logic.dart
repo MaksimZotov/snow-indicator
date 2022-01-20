@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/domain/usecases/get_cities_by_name_usecase.dart';
@@ -10,8 +9,10 @@ class SearchCityLogic extends BaseLogic {
 
   SearchCityLogic(this.getCitiesByNameFromRemoteUseCase);
 
-  List<City> _cities = [];
-  List<City> get cities => _cities;
+  List<City>? _cities;
+
+  List<City> get cities =>
+      _cities != null ? _cities! : throw Exception("Cities is null");
 
   void filterCities(String text) {
     update(() {

@@ -3,11 +3,11 @@ import 'package:snow_indicator/data/databases/cities_database.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 
 @injectable
-class AddCityUseCase {
+class GetCityUseCase {
   final CitiesDatabase _db;
-  AddCityUseCase(this._db);
+  GetCityUseCase(this._db);
 
-  Future<City> addCity(City city) async {
-    return _db.create(city);
+  Future<City> getCity(int id) async {
+    return await _db.readCity(id);
   }
 }
