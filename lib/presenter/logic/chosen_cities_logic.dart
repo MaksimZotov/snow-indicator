@@ -46,7 +46,6 @@ class ChosenCitiesLogic extends BaseLogic {
 
   Future removeCity(int index) async {
     removeCityByIndexNotifier.value = index;
-    cities.removeAt(index);
-    await _removeCityUseCase.removeCity(cities[index].id!);
+    await _removeCityUseCase.removeCity(cities.removeAt(index).id!);
   }
 }
