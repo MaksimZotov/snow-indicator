@@ -4,7 +4,7 @@ import 'package:snow_indicator/data/repositories/key_value_storage.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/domain/repository.dart';
 
-@lazySingleton
+@LazySingleton(as: Repository)
 class RepositoryImpl implements Repository {
   CitiesDatabase _citiesDB;
   KeyValueStorage _keyValueStorage;
