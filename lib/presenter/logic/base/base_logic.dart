@@ -6,8 +6,10 @@ class BaseLogic extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  @protected
   void showLoading() => update(() => _isLoading = true);
 
+  @protected
   void hideLoading() => update(() => _isLoading = false);
 
   @protected
