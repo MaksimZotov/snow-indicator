@@ -28,16 +28,17 @@ class ChosenCitiesLogic extends BaseLogic {
   );
 
   final ChangeNotifier _addCityNotifier = ChangeNotifier();
-  final ValueNotifier<int> _removeCityByIndexNotifier = ValueNotifier(-1);
+  final ValueNotifier<MapEntry<int, City>?> _removeCityNotifier =
+      ValueNotifier(null);
   List<City>? _cities;
-
-  List<City> get cities =>
-      _cities != null ? _cities! : throw Exception("Cities is null");
 
   ChangeNotifier get addCityNotifier => _addCityNotifier;
 
-  ValueNotifier<int> get removeCityByIndexNotifier =>
-      _removeCityByIndexNotifier;
+  ValueNotifier<MapEntry<int, City>?> get removeCityByIndexNotifier =>
+      _removeCityNotifier;
+
+  List<City> get cities =>
+      _cities != null ? _cities! : throw Exception("Cities is null");
 
   Future initCities() async {
     showLoading();
@@ -59,7 +60,7 @@ class ChosenCitiesLogic extends BaseLogic {
   }
 
   void removeCity(int index) {
-    removeCityByIndexNotifier.value = index;
+    removeCityByIndexNotifier.value = MapEntry(index, cities[index]);
     _removeCityUseCase.removeCity(cities.removeAt(index).id!);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:snow_indicator/di/assemble.dart';
+import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/presenter/logic/app_logic.dart';
 import 'package:snow_indicator/presenter/logic/chosen_cities_logic.dart';
 import 'package:snow_indicator/presenter/navigation/route_generator.dart';
@@ -63,7 +64,7 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
           : AnimatedList(
               key: _listKey,
               itemBuilder: (ctx, index, anim) =>
-                  _getCityWidget(ctx, index, anim),
+                  _getCityWidget(ctx, anim, index: index),
               initialItemCount: _logic.cities.length,
             ),
       floatingActionButton: FloatingActionButton(
@@ -76,7 +77,13 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
     );
   }
 
-  Widget _getCityWidget(BuildContext ctx, int index, Animation anim) {
+  Widget _getCityWidget(
+    BuildContext ctx,
+    Animation anim, {
+    int? index,
+    City? city,
+  }) {
+    final type = index != null;
     return SlideTransition(
       position: anim.drive(
         Tween(
@@ -85,18 +92,25 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
         ),
       ),
       child: ListTile(
-        title: Text(_logic.cities[index].name),
-        subtitle: Text("Snowiness: ${_logic.cities[index].snowiness}"),
+        title: Text(type ? _logic.cities[index!].name : city!.name),
+        subtitle: Text(
+          "Snowiness:"
+          " ${type ? _logic.cities[index!].snowiness : city!.snowiness}",
+        ),
         leading: const Image(
           image: AssetImage('assets/images/snowflake.png'),
         ),
         onTap: () {
           Navigator.of(ctx).pushNamed(
             Routes.toCityInfo,
-            arguments: _logic.cities[index],
+            arguments: type ? _logic.cities[index!] : city!,
           );
         },
-        onLongPress: () => _showRemoveCityDialog(ctx, index),
+        onLongPress: () {
+          if (type) {
+            _showRemoveCityDialog(ctx, index!);
+          }
+        },
       ),
     );
   }
@@ -125,10 +139,12 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
   }
 
   void _animateCityRemoving() {
-    final index = _logic.removeCityByIndexNotifier.value;
-    _listKey.currentState?.removeItem(
-      index,
-      (ctx, anim) => _getCityWidget(ctx, index, anim),
-    );
+    final indexToCity = _logic.removeCityByIndexNotifier.value;
+    if (indexToCity != null) {
+      _listKey.currentState?.removeItem(
+        indexToCity.key,
+        (ctx, anim) => _getCityWidget(ctx, anim, city: indexToCity.value),
+      );
+    }
   }
 }
