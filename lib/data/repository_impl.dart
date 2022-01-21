@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:snow_indicator/data/repositories/cities_database.dart';
 import 'package:snow_indicator/data/repositories/key_value_storage.dart';
+import 'package:snow_indicator/data/repositories/remote_repository.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/domain/repository.dart';
 
@@ -8,8 +9,9 @@ import 'package:snow_indicator/domain/repository.dart';
 class RepositoryImpl implements Repository {
   CitiesDatabase _citiesDB;
   KeyValueStorage _keyValueStorage;
+  RemoteRepository _remoteRepository;
 
-  RepositoryImpl(this._citiesDB, this._keyValueStorage);
+  RepositoryImpl(this._citiesDB, this._keyValueStorage, this._remoteRepository);
 
   @override
   Future<City> addCity(City city) async {
@@ -22,13 +24,13 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future removeCity(int id) async {
-    await _citiesDB.delete(id);
+  Future<int> removeCity(int id) async {
+    return await _citiesDB.delete(id);
   }
 
   @override
-  Future updateCity(City city) async {
-    await _citiesDB.update(city);
+  Future<int> updateCity(City city) async {
+    return await _citiesDB.update(city);
   }
 
   @override
@@ -42,24 +44,17 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  void setDarkTheme(bool darkTheme) async {
-    _keyValueStorage.setDarkTheme(darkTheme);
+  Future<void> setDarkTheme(bool darkTheme) async {
+    return await _keyValueStorage.setDarkTheme(darkTheme);
   }
 
   @override
-  List<City> getCitiesByName(String text) {
-    final List<City> _cities = [
-      City(name: 'Magnitogorsk', snowiness: 9.2, time: DateTime.now()),
-      City(name: 'Moscow', snowiness: 5.2, time: DateTime.now()),
-      City(name: 'Saint-Petersburg', snowiness: 0.5, time: DateTime.now()),
-    ];
+  Future<List<String>> getCityNamesStartedWith(String text) async {
+    return await _remoteRepository.getCityNamesStartedWith(text);
+  }
 
-    List<City> cities = [];
-    for (City city in _cities) {
-      if (city.name.toLowerCase().startsWith(text.toLowerCase())) {
-        cities.add(city);
-      }
-    }
-    return cities;
+  @override
+  Future<List<City>> getActualCitiesState(List<City> cities) async {
+    return await _remoteRepository.getActualCitiesState(cities);
   }
 }

@@ -82,8 +82,8 @@ class SearchCityState extends BaseState<SearchCityWidget> {
             color: Colors.grey,
           ),
           itemBuilder: (BuildContext context, int index) => ListTile(
-            title: Text(_logic.cities[index].name),
-            subtitle: Text("Snowiness: ${_logic.cities[index].snowiness}"),
+            title: Text(_logic.cities[index]),
+            subtitle: const Text("Tap on me!"),
             leading: const Image(
               image: AssetImage('assets/images/snowflake.png'),
             ),

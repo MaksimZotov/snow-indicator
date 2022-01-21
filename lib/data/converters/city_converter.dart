@@ -3,13 +3,12 @@ import 'package:snow_indicator/domain/entities/city.dart';
 
 @singleton
 class CityFields {
-  late final List<String> values = [id, name, snowiness, image, time];
+  late final List<String> values = [id, name, snowiness, image];
 
   final String id = '_id';
   final String name = 'name';
   final String snowiness = 'snowiness';
   final String image = 'image';
-  final String time = 'time';
 }
 
 @singleton
@@ -22,7 +21,6 @@ class CityConverter {
     name: json[_cityFields.name] as String,
     snowiness: json[_cityFields.snowiness] as double,
     image: json[_cityFields.image] as String?,
-    time: DateTime.parse(json[_cityFields.time] as String),
   );
 
   Map<String, Object?> toJson(City city) => {
@@ -30,6 +28,5 @@ class CityConverter {
    _cityFields.name: city.name,
    _cityFields.snowiness: city.snowiness,
    _cityFields.image: city.image,
-   _cityFields.time: city.time.toIso8601String(),
   };
 }

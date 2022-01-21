@@ -42,7 +42,6 @@ class CitiesDatabase {
         ${_cityFields.name} $textType,
         ${_cityFields.snowiness} $realType,
         ${_cityFields.image} $textOrNullType,
-        ${_cityFields.time} $textType
         )
       ''');
   }
@@ -71,7 +70,7 @@ class CitiesDatabase {
 
   Future<List<City>> readAllCities() async {
     final db = await _database;
-    final orderBy = '${_cityFields.time} ASC';
+    final orderBy = '${_cityFields.id} ASC';
     final result = await db.query(_citiesDB, orderBy: orderBy);
     return result.map((json) => _cityConverter.fromJson(json)).toList();
   }

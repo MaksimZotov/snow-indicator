@@ -7,8 +7,8 @@ class KeyValueStorage {
 
   final _darkThemeKey = 'DARK_THEME_KEY';
 
-  Future setDarkTheme(bool darkTheme) async {
-    await _storage.write(_darkThemeKey, darkTheme);
+  Future<void> setDarkTheme(bool darkTheme) async {
+    return await _storage.write(_darkThemeKey, darkTheme);
   }
 
   Future<bool> getDarkTheme() async {

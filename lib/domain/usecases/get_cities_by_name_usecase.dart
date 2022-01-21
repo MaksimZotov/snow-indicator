@@ -8,7 +8,7 @@ class GetCitiesByNameUseCase {
   final Repository _repository;
   GetCitiesByNameUseCase(this._repository);
 
-  List<City> getCitiesByName(String text) {
-    return _repository.getCitiesByName(text);
+  Future<List<String>> getCityNamesStartedWith(String text) async {
+    return await _repository.getCityNamesStartedWith(text);
   }
 }

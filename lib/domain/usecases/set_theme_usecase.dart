@@ -7,7 +7,7 @@ class SetThemeUseCase {
   final Repository _repository;
   SetThemeUseCase(this._repository);
 
-  void setDarkTheme(bool darkTheme) {
-    _repository.setDarkTheme(darkTheme);
+  Future<void> setDarkTheme(bool darkTheme) async {
+    return await _repository.setDarkTheme(darkTheme);
   }
 }

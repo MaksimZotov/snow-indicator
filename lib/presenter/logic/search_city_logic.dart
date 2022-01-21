@@ -9,14 +9,13 @@ class SearchCityLogic extends BaseLogic {
 
   SearchCityLogic(this.getCitiesByNameFromRemoteUseCase);
 
-  List<City>? _cities;
+  List<String>? _cities;
 
-  List<City> get cities =>
+  List<String> get cities =>
       _cities != null ? _cities! : throw Exception("Cities is null");
 
-  void filterCities(String text) {
-    update(() {
-      _cities = getCitiesByNameFromRemoteUseCase.getCitiesByName(text);
-    });
+  Future filterCities(String text) async {
+    _cities =
+        await getCitiesByNameFromRemoteUseCase.getCityNamesStartedWith(text);
   }
 }
