@@ -1,13 +1,14 @@
 import 'package:injectable/injectable.dart';
-import 'package:snow_indicator/data/databases/cities_database.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
+
+import '../repository.dart';
 
 @injectable
 class UpdateCityUseCase {
-  final CitiesDatabase _db;
-  UpdateCityUseCase(this._db);
+  final Repository _repository;
+  UpdateCityUseCase(this._repository);
 
   Future updateCity(City city) async {
-    await _db.update(city);
+    await _repository.updateCity(city);
   }
 }

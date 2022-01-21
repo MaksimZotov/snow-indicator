@@ -1,13 +1,14 @@
 import 'package:injectable/injectable.dart';
-import 'package:snow_indicator/data/databases/cities_database.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
+
+import '../repository.dart';
 
 @injectable
 class GetChosenCitiesUseCase {
-  final CitiesDatabase _db;
-  GetChosenCitiesUseCase(this._db);
+  final Repository _repository;
+  GetChosenCitiesUseCase(this._repository);
 
   Future<List<City>> getChosenCities() async {
-    return await _db.readAllCities();
+    return await _repository.getChosenCities();
   }
 }

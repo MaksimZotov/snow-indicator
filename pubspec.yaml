@@ -34,7 +34,9 @@ dependencies:
   path:
 
   image_picker: ^0.8.4+4
+
   sqflite: ^2.0.2
+  get_storage: ^2.0.3
 
   injectable: ^1.5.3
   get_it: ^7.2.0

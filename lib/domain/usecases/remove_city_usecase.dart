@@ -1,12 +1,13 @@
 import 'package:injectable/injectable.dart';
-import 'package:snow_indicator/data/databases/cities_database.dart';
+
+import '../repository.dart';
 
 @injectable
 class RemoveCityUseCase {
-  final CitiesDatabase _db;
-  RemoveCityUseCase(this._db);
+  final Repository _repository;
+  RemoveCityUseCase(this._repository);
 
   Future removeCity(int id) async {
-    await _db.delete(id);
+    await _repository.removeCity(id);
   }
 }

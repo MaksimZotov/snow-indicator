@@ -1,12 +1,13 @@
 import 'package:injectable/injectable.dart';
-import 'package:snow_indicator/data/databases/cities_database.dart';
+
+import '../repository.dart';
 
 @injectable
 class SetThemeUseCase {
-  final CitiesDatabase _db;
-  SetThemeUseCase(this._db);
+  final Repository _repository;
+  SetThemeUseCase(this._repository);
 
   Future<bool> setDarkTheme(bool darkTheme) async {
-    return await true;
+    return await _repository.setDarkTheme(darkTheme);
   }
 }
