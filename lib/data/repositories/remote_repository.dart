@@ -11,7 +11,7 @@ class RemoteRepository {
 
   RemoteRepository(this._cityConverter);
 
-  final url = 'api.openweathermap.org/data/2.5/weather?';
+  final url = 'https://api.openweathermap.org/data/2.5/weather?';
   final appId = 'appId=76213d5339b06a994535d0cfcdbeab22';
 
   Future<List<City>> loadActualCitiesState(List<String> cities) async {
@@ -32,7 +32,24 @@ class RemoteRepository {
   final List<String> _cities = [
     'Magnitogorsk',
     'Moscow',
-    'Saint-Petersburg',
+    'Arkhangelsk',
+    'Armavir',
+    'Arsenyev',
+    'Artem',
+    'Arkhangelsk',
+    'Asbestos',
+    'Astrakhan',
+    'Achinsk',
+    'Balakovo',
+    'Balakhna',
+    'Balashikha',
+    'Balashov',
+    'Barnaul',
+    'Bataysk',
+    'Belgorod',
+    'Murmansk',
+    'Murom',
+    'Mytishchi',
   ];
 
   /// Stub

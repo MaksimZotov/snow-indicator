@@ -41,7 +41,7 @@ class CitiesDatabase {
         ${_cityFields.id} $idType, 
         ${_cityFields.name} $textType,
         ${_cityFields.snowiness} $realType,
-        ${_cityFields.image} $textOrNullType,
+        ${_cityFields.image} $textOrNullType
         )
       ''');
   }

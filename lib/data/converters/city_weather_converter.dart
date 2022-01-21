@@ -20,9 +20,9 @@ class CityWeatherConverter {
 
   City fromJson(Map<String, Object?> json) {
     final name = json[_fields.name] as String;
-    double snowiness = 0;
-    final weatherField = json[_fields.weather] as Map<String, Object?>;
-    final mainField = weatherField[_fields.main] as String;
+    double snowiness = 0.0;
+    final weatherField = json[_fields.weather] as List<dynamic>;
+    final mainField = weatherField.first[_fields.main] as String;
     if (mainField == 'Snow') {
       final snowField = json[_fields.snow] as Map<String, Object?>;
       int count = 0;

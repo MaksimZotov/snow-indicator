@@ -23,7 +23,7 @@ class CityInfoLogic extends BaseLogic {
     if (city.snowiness == 0) {
       return const Duration(milliseconds: 10000);
     } else {
-      return Duration(milliseconds: 10000 ~/ city.snowiness);
+      return Duration(milliseconds: 1000 ~/ city.snowiness);
     }
   }
 

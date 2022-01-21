@@ -11,7 +11,8 @@ class LoadActualCitiesStateUseCase {
     final cityNames = cities.map((city) => city.name).toList();
     final updatedCities = await _repository.loadActualCitiesState(cityNames);
     for (int i = 0; i < updatedCities.length; i++) {
-      updatedCities[i] = updatedCities[i].copy(image: cities[i].image);
+      final prev = cities[i];
+      updatedCities[i] = updatedCities[i].copy(id: prev.id, image: prev.image);
     }
     return updatedCities;
   }
