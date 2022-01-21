@@ -1,13 +1,15 @@
 import 'package:injectable/injectable.dart';
 import 'package:snow_indicator/data/repositories/cities_database.dart';
+import 'package:snow_indicator/data/repositories/key_value_storage.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/domain/repository.dart';
 
-@singleton
+@lazySingleton
 class RepositoryImpl implements Repository {
   CitiesDatabase _citiesDB;
+  KeyValueStorage _keyValueStorage;
 
-  RepositoryImpl(this._citiesDB);
+  RepositoryImpl(this._citiesDB, this._keyValueStorage);
 
   @override
   Future<City> addCity(City city) async {
@@ -36,14 +38,15 @@ class RepositoryImpl implements Repository {
 
   @override
   Future<bool> getDarkTheme() async {
-    return await true;
+    return await _keyValueStorage.getDarkTheme();
   }
 
   @override
-  Future<bool> setDarkTheme(bool darkTheme) async {
-    return await true;
+  void setDarkTheme(bool darkTheme) async {
+    _keyValueStorage.setDarkTheme(darkTheme);
   }
 
+  @override
   List<City> getCitiesByName(String text) {
     final List<City> _cities = [
       City(name: 'Magnitogorsk', snowiness: 9.2, time: DateTime.now()),

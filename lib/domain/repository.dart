@@ -7,6 +7,6 @@ abstract class Repository {
   Future updateCity(City city);
   Future<List<City>> getChosenCities();
   Future<bool> getDarkTheme();
-  Future<bool> setDarkTheme(bool darkTheme);
+  void setDarkTheme(bool darkTheme);
   List<City> getCitiesByName(String text);
 }
