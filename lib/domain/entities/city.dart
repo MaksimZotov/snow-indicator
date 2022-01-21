@@ -21,6 +21,6 @@ class City {
         id: id ?? this.id,
         name: name ?? this.name,
         snowiness: snowiness ?? this.snowiness,
-        image: image ?? this.image,
+        image: image,
       );
 }

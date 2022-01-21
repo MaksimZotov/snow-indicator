@@ -11,11 +11,9 @@ class CityInfoLogic extends BaseLogic {
 
   CityInfoLogic(this._updateCityUseCase, this._city);
 
-  File? _bg;
-
   City get city => _city;
 
-  File? get bg => _bg;
+  File? get bg => city.image != null ? File(city.image!) : null;
 
   Duration getDuration() {
     if (city.snowiness == 0) {
@@ -26,12 +24,9 @@ class CityInfoLogic extends BaseLogic {
   }
 
   void setBackground(String? image) {
-    if (image != city.image) {
-      update(() {
-        _city = city.copy(image: image);
-        _updateCityUseCase.updateCity(city);
-        _bg = city.image != null ? File(city.image!) : null;
-      });
-    }
+    update(() {
+      _city = city.copy(image: image);
+      _updateCityUseCase.updateCity(city);
+    });
   }
 }
