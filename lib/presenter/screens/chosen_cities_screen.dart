@@ -101,10 +101,9 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
           image: AssetImage('assets/images/snowflake.png'),
         ),
         onTap: () {
-          Navigator.of(ctx).pushNamed(
-            Routes.toCityInfo,
-            arguments: type ? _logic.cities[index!] : city!,
-          );
+          if (type) {
+            _goToCityInfoScreen(ctx, index!);
+          }
         },
         onLongPress: () {
           if (type) {
@@ -113,6 +112,15 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
         },
       ),
     );
+  }
+
+  Future _goToCityInfoScreen(BuildContext ctx, int index) async {
+    final cityWithPrevImage = _logic.cities[index];
+    final curImage = await Navigator.of(ctx).pushNamed(
+      Routes.toCityInfo,
+      arguments: cityWithPrevImage,
+    );
+    _logic.cities[index] = cityWithPrevImage.copy(image: curImage as String?);
   }
 
   Future _showRemoveCityDialog(BuildContext ctx, int index) async {

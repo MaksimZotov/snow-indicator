@@ -47,31 +47,34 @@ class CityInfoState extends BaseState<CityInfoWidget>
 
   @override
   Widget build(BuildContext ctx) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(_logic.city.name),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.add_photo_alternate),
-              onPressed: () => _showChoseBackgroundDialog(ctx),
-            ),
-          ],
-        ),
-        body: _logic.isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : Stack(
-                fit: StackFit.expand,
-                children: [
-                  _getBackground(),
-                  _getSnowiness(),
-                  _getSnowflake(top: 25, left: 25),
-                  _getSnowflake(top: 25, right: 25),
-                  _getSnowflake(bottom: 25, left: 25),
-                  _getSnowflake(bottom: 25, right: 25),
-                ],
-              ));
+    return WillPopScope(
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text(_logic.city.name),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.add_photo_alternate),
+                onPressed: () => _showChoseBackgroundDialog(ctx),
+              ),
+            ],
+          ),
+          body: _logic.isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    _getBackground(),
+                    _getSnowiness(),
+                    _getSnowflake(top: 25, left: 25),
+                    _getSnowflake(top: 25, right: 25),
+                    _getSnowflake(bottom: 25, left: 25),
+                    _getSnowflake(bottom: 25, right: 25),
+                  ],
+                )),
+      onWillPop: () async => _onWillPop(ctx),
+    );
   }
 
   Future _showChoseBackgroundDialog(BuildContext ctx) async {
@@ -128,4 +131,9 @@ class CityInfoState extends BaseState<CityInfoWidget>
           ),
         ),
       );
+
+  bool _onWillPop(BuildContext ctx) {
+    Navigator.of(ctx).pop(_logic.city.image);
+    return true;
+  }
 }
