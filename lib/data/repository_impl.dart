@@ -7,9 +7,9 @@ import 'package:snow_indicator/domain/repository.dart';
 
 @LazySingleton(as: Repository)
 class RepositoryImpl implements Repository {
-  CitiesDatabase _citiesDB;
-  KeyValueStorage _keyValueStorage;
-  RemoteRepository _remoteRepository;
+  final CitiesDatabase _citiesDB;
+  final KeyValueStorage _keyValueStorage;
+  final RemoteRepository _remoteRepository;
 
   RepositoryImpl(this._citiesDB, this._keyValueStorage, this._remoteRepository);
 
@@ -54,7 +54,7 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<List<City>> getActualCitiesState(List<City> cities) async {
-    return await _remoteRepository.getActualCitiesState(cities);
+  Future<List<City>> loadActualCitiesState(List<String> cities) async {
+    return await _remoteRepository.loadActualCitiesState(cities);
   }
 }

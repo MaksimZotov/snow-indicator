@@ -14,11 +14,11 @@ class RemoteRepository {
   final url = 'api.openweathermap.org/data/2.5/weather?';
   final appId = 'appId=76213d5339b06a994535d0cfcdbeab22';
 
-  Future<List<City>> getActualCitiesState(List<City> cities) async {
+  Future<List<City>> loadActualCitiesState(List<String> cities) async {
     List<City> updatedCities = [];
-    for (City city in cities) {
+    for (String city in cities) {
       final response =
-          await get(Uri.parse('${url}q=${city.name}&$appId'));
+          await get(Uri.parse('${url}q=${city}&$appId'));
       if (response.statusCode == 200) {
         updatedCities.add(_cityConverter.fromJson(jsonDecode(response.body)));
       } else {

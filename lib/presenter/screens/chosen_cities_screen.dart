@@ -25,7 +25,7 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
 
   @override
   void initState() {
-    _logic.getChosenCities();
+    _logic.initCities();
     _logic.addListener(update);
     _logic.addCityNotifier.addListener(_animateCityAdding);
     _logic.removeCityByIndexNotifier.addListener(_animateCityRemoving);
@@ -150,8 +150,8 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
     final addedCity = await Navigator.of(ctx).pushNamed(
       Routes.toSearchCity,
     );
-    if (addedCity != null && addedCity is City?) {
-      _logic.addCity(addedCity as City);
+    if (addedCity != null && addedCity is String?) {
+      _logic.addCity(addedCity as String);
     }
   }
 

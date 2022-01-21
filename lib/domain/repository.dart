@@ -9,4 +9,5 @@ abstract class Repository {
   Future<bool> getDarkTheme();
   Future<void> setDarkTheme(bool darkTheme);
   Future<List<String>> getCityNamesStartedWith(String text);
+  Future<List<City>> loadActualCitiesState(List<String> cities);
 }
