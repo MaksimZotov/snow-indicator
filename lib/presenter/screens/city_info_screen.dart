@@ -4,7 +4,7 @@ import 'package:snow_indicator/di/assemble.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/presenter/logic/city_info_logic.dart';
 import 'package:snow_indicator/presenter/screens/base/base_state.dart';
-import 'chose_background_dialog.dart';
+import 'dialogs/chose_background_dialog.dart';
 
 class CityInfoWidget extends StatefulWidget {
   final City city;

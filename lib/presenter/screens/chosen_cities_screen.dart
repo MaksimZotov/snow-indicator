@@ -5,6 +5,7 @@ import 'package:snow_indicator/presenter/logic/app_logic.dart';
 import 'package:snow_indicator/presenter/logic/chosen_cities_logic.dart';
 import 'package:snow_indicator/presenter/navigation/route_generator.dart';
 import 'package:snow_indicator/presenter/screens/base/base_state.dart';
+import 'package:snow_indicator/presenter/screens/dialogs/remove_city_dialog.dart';
 
 class ChosenCitiesWidget extends StatefulWidget {
   const ChosenCitiesWidget({Key? key}) : super(key: key);
@@ -95,54 +96,19 @@ class ChosenCitiesState extends BaseState<ChosenCitiesWidget> {
             arguments: _logic.cities[index],
           );
         },
-        onLongPress: () => showDialog(
-          context: ctx,
-          builder: (BuildContext ctx) {
-            const padding = 10.0;
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: Wrap(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(padding),
-                        child: Text(
-                          'Do you want to remove ${_logic.cities[index].name}?',
-                          style: const TextStyle(fontSize: 18.0),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(padding),
-                        child: ElevatedButton(
-                          child: const Text('Yes'),
-                          onPressed: () {
-                            _logic.removeCity(index);
-                            Navigator.of(ctx).pop();
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(padding),
-                        child: ElevatedButton(
-                          child: const Text('No'),
-                          onPressed: () {
-                            Navigator.of(ctx).pop();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+        onLongPress: () => _showRemoveCityDialog(ctx, index),
       ),
     );
+  }
+
+  Future _showRemoveCityDialog(BuildContext ctx, int index) async {
+    final remove = await showDialog<bool?>(
+      context: ctx,
+      builder: (_) => RemoveCityDialog(_logic.cities[index].name),
+    );
+    if (remove != null && remove) {
+      _logic.removeCity(index);
+    }
   }
 
   Future _searchCity(BuildContext ctx) async {
