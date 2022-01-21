@@ -10,4 +10,5 @@ abstract class Repository {
   Future<void> setDarkTheme(bool darkTheme);
   Future<List<String>> getCityNamesStartedWith(String text);
   Future<List<City>> loadActualCitiesState(List<String> cities);
+  Future disposeRepository();
 }

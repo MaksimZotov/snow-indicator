@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ChoseBackgroundDialog extends StatelessWidget {
+  static const defaultBackgroundKey = "setDefaultBackgroundCode";
+
   final padding = 10.0;
 
   const ChoseBackgroundDialog({Key? key}) : super(key: key);
@@ -46,7 +48,7 @@ class ChoseBackgroundDialog extends StatelessWidget {
                   child: OutlinedButton(
                     child: const Text("Yes, set default background"),
                     onPressed: () {
-                      Navigator.of(ctx).pop();
+                      Navigator.of(ctx).pop(defaultBackgroundKey);
                     },
                   )
               ),

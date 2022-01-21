@@ -1,5 +1,4 @@
 import 'package:injectable/injectable.dart';
-import 'package:snow_indicator/domain/entities/city.dart';
 
 import '../repository.dart';
 

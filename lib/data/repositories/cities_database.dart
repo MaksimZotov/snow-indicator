@@ -96,6 +96,6 @@ class CitiesDatabase {
 
   Future close() async {
     final db = await _database;
-    db.close();
+    await db.close();
   }
 }

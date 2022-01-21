@@ -2,7 +2,6 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:snow_indicator/data/converters/city_converter.dart';
 import 'package:snow_indicator/domain/entities/city.dart';
-import 'package:snow_indicator/domain/usecases/get_city_usecase.dart';
 import 'package:snow_indicator/domain/usecases/update_city_usecase.dart';
 import 'package:snow_indicator/presenter/logic/city_info_logic.dart';
 import 'package:snow_indicator/presenter/screens/app_screen.dart';
@@ -19,7 +18,6 @@ void setup() {
   $initGetIt(getIt);
   getIt.registerFactoryParam<CityInfoLogic, City, void>(
     (city, _) => CityInfoLogic(
-      getIt.get<GetCityUseCase>(),
       getIt.get<UpdateCityUseCase>(),
       city,
     ),

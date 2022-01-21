@@ -57,4 +57,9 @@ class RepositoryImpl implements Repository {
   Future<List<City>> loadActualCitiesState(List<String> cities) async {
     return await _remoteRepository.loadActualCitiesState(cities);
   }
+
+  @override
+  Future disposeRepository() async {
+    return await _citiesDB.close();
+  }
 }

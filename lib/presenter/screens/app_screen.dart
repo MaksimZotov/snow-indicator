@@ -29,6 +29,7 @@ class AppState extends BaseState<AppWidget> {
   @override
   void dispose() {
     _logic.removeListener(update);
+    _logic.disposeRepository();
     super.dispose();
   }
 

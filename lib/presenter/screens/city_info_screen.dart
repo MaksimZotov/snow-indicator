@@ -30,7 +30,6 @@ class CityInfoState extends BaseState<CityInfoWidget>
   @override
   void initState() {
     _logic.addListener(update);
-    _logic.getActualCityState();
     _controller = AnimationController(
       duration: _logic.getDuration(),
       vsync: this,
@@ -80,7 +79,11 @@ class CityInfoState extends BaseState<CityInfoWidget>
       context: ctx,
       builder: (_) => const ChoseBackgroundDialog(),
     );
-    _logic.setBackground(image: image);
+    if (image != null) {
+      final imageParam =
+          image == ChoseBackgroundDialog.defaultBackgroundKey ? null : image;
+      _logic.setBackground(imageParam);
+    }
   }
 
   Container _getBackground() => Container(

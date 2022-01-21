@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:snow_indicator/di/assemble.dart';
-import 'package:snow_indicator/domain/entities/city.dart';
 import 'package:snow_indicator/presenter/logic/app_logic.dart';
 import 'package:snow_indicator/presenter/logic/chosen_cities_logic.dart';
 import 'package:snow_indicator/presenter/navigation/route_generator.dart';
