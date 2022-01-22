@@ -10,8 +10,8 @@ class CitiesDatabase {
   final String _citiesDB = 'cities';
   final _pathToDB = 'cities.db';
 
-  late final CityConverter _cityConverter;
-  late final CityFields _cityFields;
+  final CityConverter _cityConverter;
+  final CityFields _cityFields;
   CitiesDatabase(this._cityConverter, this._cityFields);
 
   Database? _databaseNullable;
